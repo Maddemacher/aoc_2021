@@ -1,8 +1,14 @@
-FROM gradle:7.2.0-jdk17 as BASE
-WORKDIR /src
-COPY ./ .
-RUN gradle build
+FROM haskell:8.10
 
-FROM openjdk:17
-COPY --from=BASE /src/app/build/libs/app.jar /app.jar
-CMD java -jar /app.jar
+WORKDIR /opt/app
+
+RUN cabal update
+
+COPY ./day01.cabal /opt/app/day01.cabal
+
+RUN cabal build --only-dependencies -j4
+
+COPY . /opt/app
+RUN cabal install
+
+CMD ["day01"]
