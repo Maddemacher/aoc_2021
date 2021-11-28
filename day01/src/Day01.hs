@@ -5,11 +5,13 @@ import Data.List.Split (splitOn)
 import System.Environment ()
 import System.Environment.MrEnv (envAsString)
 
-factors :: Integral a => a -> [a]
-factors n = [x | x <- [1 .. n], mod n x == 0]
+divisors :: Integral a => a -> [a]
+divisors 0 = [1]
+divisors 1 = [1]
+divisors n = [x | x <- [1 .. n], mod n x == 0]
 
 prime :: Integral a => a -> Bool
-prime n = factors n == [1, n]
+prime n = divisors n == [1, n]
 
 notPrime :: Integral a => a -> Bool
 notPrime n = not (prime n)
@@ -28,7 +30,7 @@ partTwoAggregate :: Integral a => (a, a) -> a
 partTwoAggregate (number, index) =
   if even index
     then number
-    else -number
+    else - number
 
 partTwo :: Integral a => [a] -> a
 partTwo numbers =
