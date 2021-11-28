@@ -1,13 +1,9 @@
 module Day01 where
 
-import Data.List
-import Data.List.Split
-import System.Environment
-import System.Environment.MrEnv
-
-double x = x * 2
-
-half x = x / 2
+import Data.List ()
+import Data.List.Split (splitOn)
+import System.Environment ()
+import System.Environment.MrEnv (envAsString)
 
 factors :: Integral a => a -> [a]
 factors n = [x | x <- [1 .. n], mod n x == 0]

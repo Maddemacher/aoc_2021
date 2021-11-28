@@ -9,8 +9,8 @@ extra-source-files:
     CHANGELOG.md
     README.md
 
-Library
-    Exposed-Modules:  Day01
+library
+    exposed-modules:  Day01
     hs-source-dirs:   src
     default-language: Haskell2010
     build-depends:    
@@ -18,23 +18,22 @@ Library
         mr-env,
         split
 
-executable main
+executable main 
     main-is: Main.hs
+    default-language: Haskell2010
     build-depends:    
         base ^>=4.14.3.0, 
         day01
-    default-language: Haskell2010
 
-test-suite tests
+test-suite test 
     type:             exitcode-stdio-1.0
     hs-source-dirs:   src, test
-    Main-is:          Day01.test.hs
+    main-is:          Day01.test.hs
     default-language: Haskell2010
-    Build-Depends:    
+    build-depends:    
         base ^>=4.14.3.0,
         mr-env,
         split,
         tasty,
-        tasty-hunit,
-        day01,
+        tasty-hunit
 

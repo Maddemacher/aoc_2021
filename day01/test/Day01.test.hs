@@ -1,17 +1,20 @@
-import Test.Tasty (defaultMain, testGroup)
+import Day01 (prime)
+import Test.Tasty (TestTree, defaultMain, testGroup)
 import Test.Tasty.HUnit (assertEqual, testCase)
 
-import Day01 (double, half)
-
+main :: IO ()
 main = defaultMain unitTests
 
+unitTests :: TestTree
 unitTests =
   testGroup
     "Unit tests"
     [doublingMakesNumbersBigger, halvingMakesNumbersSmaller]
 
+doublingMakesNumbersBigger :: TestTree
 doublingMakesNumbersBigger =
-  testCase "Double of 4 is 8" $ assertEqual [] 8 (double 4)
+  testCase "13 is prime" $ assertEqual [] True (prime 13)
 
+halvingMakesNumbersSmaller :: TestTree
 halvingMakesNumbersSmaller =
-  testCase "Half of 9 is 4.5" $ assertEqual [] 4.5 (half 9)
+  testCase "9 is not prime" $ assertEqual [] False (prime 9)
