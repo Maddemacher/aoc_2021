@@ -1,5 +1,5 @@
 import Data.List.Split (splitOn)
-import Day01 (divisors, doPart, prime)
+import Day01 (divisors, prime, solve)
 import Test.Tasty (TestTree, defaultMain, testGroup)
 import Test.Tasty.HUnit (assertEqual, testCase)
 
@@ -40,6 +40,6 @@ partTests :: TestTree
 partTests =
   testGroup
     "partTests"
-    [ testCase "should return false for 0" $ assertEqual [] 2421 (doPart "part1" testNumbers),
-      testCase "should return false for 0" $ assertEqual [] 335 (doPart "part2" testNumbers)
+    [ testCase "should return false for 0" $ assertEqual [] 2421 (solve "part1" testNumbers),
+      testCase "should return false for 0" $ assertEqual [] 335 (solve "part2" testNumbers)
     ]

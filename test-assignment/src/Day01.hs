@@ -7,32 +7,33 @@ import System.Environment.MrEnv (envAsString)
 
 divisors :: Integral a => a -> [a]
 divisors 0 = [1]
-divisors 1 = [1]
 divisors n = [x | x <- [1 .. n], mod n x == 0]
 
 prime :: Integral a => a -> Bool
 prime n = divisors n == [1, n]
 
-notPrime :: Integral a => a -> Bool
-notPrime n = not (prime n)
-
 getRelevantNumbers :: Integral a => (a -> Bool) -> [a] -> [(a, a)]
 getRelevantNumbers predicate numbers = [(x, i) | (x, i) <- zip numbers [0 ..], predicate x]
 
-partOneAggregate :: Integral a => (a, a) -> a
-partOneAggregate (number, index) = number * index
+getAggregator :: Integral a => String -> ((a, a) -> a)
+getAggregator "part1" = uncurry (*)
+getAggregator "part2" = \(n, i) -> if even i then n else - n
+getAggregator x = error "Not a valid part"
 
-partTwoAggregate :: Integral a => (a, a) -> a
-partTwoAggregate (number, index) = if even index then number else - number
+getPredicate :: Integral a => String -> (a -> Bool)
+getPredicate "part1" = prime
+getPredicate "part2" = not . prime
+getPredicate x = error "Not a valid part"
 
-doPart :: Integral a => String -> [a] -> a
-doPart "part1" numbers = sum (map partOneAggregate (getRelevantNumbers prime numbers))
-doPart "part2" numbers = sum (map partTwoAggregate (getRelevantNumbers notPrime numbers))
-doPart x input = error "Not a valid part"
+solve :: Integral a => String -> [a] -> a
+solve part numbers = do
+  let aggregator = getAggregator part
+  let predicate = getPredicate part
+  sum (map aggregator (getRelevantNumbers predicate numbers))
 
 main :: IO ()
 main = do
   part <- envAsString "part" ""
   input <- readFile "data/input.txt"
   let numbers = map read (splitOn "\n" input)
-  print (doPart part numbers)
+  print (solve part numbers)
