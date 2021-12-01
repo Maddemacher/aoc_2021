@@ -3,7 +3,6 @@ module Day01 where
 import Data.List (tails)
 import Data.List.Split (splitOn)
 import System.Environment.MrEnv (envAsString)
-import Text.Read (readMaybe)
 
 maybeBigger :: (Maybe Int, Maybe Int) -> Bool
 maybeBigger (Nothing, curr) = False
