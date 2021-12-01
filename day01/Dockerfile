@@ -11,4 +11,4 @@ RUN cabal build --only-dependencies -j4
 COPY . /opt/app
 RUN cabal install
 
-CMD ["day01"]
+CMD ["main"]
