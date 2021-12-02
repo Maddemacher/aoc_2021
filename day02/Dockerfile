@@ -1,6 +1,14 @@
-FROM node:17-slim
-COPY . /app
-WORKDIR /app
-RUN yarn install
+FROM haskell:8.10
 
-CMD node /app/index.js
+WORKDIR /opt/app
+
+RUN cabal update
+
+COPY ./day01.cabal /opt/app/day01.cabal
+
+RUN cabal build --only-dependencies -j4
+
+COPY . /opt/app
+RUN cabal install
+
+CMD ["day01"]
