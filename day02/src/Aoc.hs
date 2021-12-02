@@ -10,8 +10,17 @@ addMovement (x, y) ("up", amount) = (x, y - amount)
 addMovement (x, y) ("down", amount) = (x, y + amount)
 addMovement x _ = error "Unknown direction"
 
+addMovementDir :: (Int, Int, Int) -> ([Char], Int) -> (Int, Int, Int)
+addMovementDir (x, y, aim) ("forward", amount) = (x + amount, y + (aim * amount), aim)
+addMovementDir (x, y, aim) ("up", amount) = (x, y, aim - amount)
+addMovementDir (x, y, aim) ("down", amount) = (x, y, aim + amount)
+addMovementDir x _ = error "Unknown direction"
+
 solve :: String -> [([Char], Int)] -> Int
 solve "part1" movements = uncurry (*) (foldl addMovement (0, 0) movements)
+solve "part2" movements = do
+  let (x, y, _) = foldl addMovementDir (0, 0, 0) movements
+  x * y
 solve x _ = error "Not a valid part"
 
 splitMovement :: String -> ([Char], Int)

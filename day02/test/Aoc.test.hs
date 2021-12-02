@@ -26,5 +26,6 @@ solveTests :: TestTree
 solveTests =
   testGroup
     "solveTests"
-    [ testCase "should count increases for part1" $ assertEqual [] 150 (solve "part1" testNumbers)
+    [ testCase "should count increases for part1" $ assertEqual [] 150 (solve "part1" testNumbers),
+      testCase "should count increases for part1" $ assertEqual [] 900 (solve "part2" testNumbers)
     ]
