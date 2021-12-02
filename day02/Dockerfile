@@ -4,11 +4,11 @@ WORKDIR /opt/app
 
 RUN cabal update
 
-COPY ./day01.cabal /opt/app/day01.cabal
+COPY ./aoc.cabal /opt/app/aoc.cabal
 
 RUN cabal build --only-dependencies -j4
 
 COPY . /opt/app
 RUN cabal install
 
-CMD ["day01"]
+CMD ["main"]
