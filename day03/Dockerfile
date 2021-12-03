@@ -1,8 +1,14 @@
-FROM golang:1.17-alpine as BASE
-WORKDIR /src
-COPY ./ .
-RUN go build -o /bin/aoc
+FROM haskell:8.10
 
-FROM scratch
-COPY --from=BASE /bin/aoc /bin/aoc
-ENTRYPOINT [ "/bin/aoc" ]
+WORKDIR /opt/app
+
+RUN cabal update
+
+COPY ./aoc.cabal /opt/app/aoc.cabal
+
+RUN cabal build --only-dependencies -j4
+
+COPY . /opt/app
+RUN cabal install
+
+CMD ["main"]
