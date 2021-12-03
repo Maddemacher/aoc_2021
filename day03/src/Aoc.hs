@@ -20,21 +20,16 @@ at index input = input !! index
 getAnalysis :: [[Char]] -> Int -> (Char, Char)
 getAnalysis input index = analyze (map (at index) input)
 
-doFilterCommon :: Int -> [[Char]] -> [[Char]]
-doFilterCommon index input = do
-  let (common, _) = getAnalysis input index
+doFilter :: Int -> [[Char]] -> ((Char, Char) -> Char) -> [[Char]]
+doFilter index input selector = do
+  let common = selector (getAnalysis input index)
   [x | x <- input, at index x == common]
 
-doFilterUncommon :: Int -> [[Char]] -> [[Char]]
-doFilterUncommon index input = do
-  let (_, uncommon) = getAnalysis input index
-  [x | x <- input, at index x == uncommon]
-
-asd :: Int -> [[Char]] -> (Int -> [[Char]] -> [[Char]]) -> [Char]
-asd index [x] filterFunc = x
-asd index input filterFunc = do
-  let hej = filterFunc index input
-  asd (index + 1) hej filterFunc
+getAirValue :: Int -> [[Char]] -> ((Char, Char) -> Char) -> [Char]
+getAirValue index [x] selector = x
+getAirValue index input selector = do
+  let filtered = doFilter index input selector
+  getAirValue (index + 1) filtered selector
 
 solveOne :: [[Char]] -> Int
 solveOne input = do
@@ -46,8 +41,8 @@ solveOne input = do
 
 solveTwo :: [[Char]] -> Int
 solveTwo input = do
-  let oxygen = asd 0 input doFilterCommon
-  let scrubber = asd 0 input doFilterUncommon
+  let oxygen = getAirValue 0 input fst
+  let scrubber = getAirValue 0 input snd
   toDec oxygen * toDec scrubber
 
 solve :: String -> [[Char]] -> Int
@@ -59,5 +54,4 @@ main :: IO ()
 main = do
   part <- envAsString "part" "part1"
   input <- readFile "data/input.txt"
-  let numbers = splitOn "\n" input
-  print (solve part numbers)
+  print (solve part (splitOn "\n" input))

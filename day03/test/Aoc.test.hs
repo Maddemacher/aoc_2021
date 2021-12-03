@@ -1,4 +1,4 @@
-import Aoc (doFilterCommon, doFilterUncommon, solve)
+import Aoc (solve)
 import Data.List.Split (splitOn)
 import Test.Tasty (TestTree, defaultMain, testGroup)
 import Test.Tasty.HUnit (assertEqual, testCase)
@@ -18,24 +18,6 @@ testNumbers =
     "01010"
   ]
 
-filteredNumbersCommon =
-  [ "11110",
-    "10110",
-    "10111",
-    "10101",
-    "11100",
-    "10000",
-    "11001"
-  ]
-
-filteredNumbersUncommon =
-  [ "00100",
-    "01111",
-    "00111",
-    "00010",
-    "01010"
-  ]
-
 main :: IO ()
 main = defaultMain unitTests
 
@@ -51,14 +33,5 @@ solveTests =
   testGroup
     "solveTests"
     [ testCase "should count increases for part1" $ assertEqual [] 198 (solve "part1" testNumbers),
-      testCase "should count increases for part1" $ assertEqual [] 230 (solve "part2" testNumbers),
-      testCase
-        "should filter out in do filter"
-        $assertEqual
-        []
-        filteredNumbersCommon
-        (doFilterCommon 0 testNumbers),
-      testCase
-        "should filter out in do filter"
-        $ assertEqual [] filteredNumbersUncommon (doFilterUncommon 0 testNumbers)
+      testCase "should count increases for part1" $ assertEqual [] 230 (solve "part2" testNumbers)
     ]
