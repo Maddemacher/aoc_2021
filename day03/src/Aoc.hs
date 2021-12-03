@@ -20,6 +20,22 @@ at index input = input !! index
 getAnalysis :: [[Char]] -> Int -> (Char, Char)
 getAnalysis input index = analyze (map (at index) input)
 
+doFilterCommon :: Int -> [[Char]] -> [[Char]]
+doFilterCommon index input = do
+  let (common, _) = getAnalysis input index
+  [x | x <- input, at index x == common]
+
+doFilterUncommon :: Int -> [[Char]] -> [[Char]]
+doFilterUncommon index input = do
+  let (_, uncommon) = getAnalysis input index
+  [x | x <- input, at index x == uncommon]
+
+asd :: Int -> [[Char]] -> (Int -> [[Char]] -> [[Char]]) -> [Char]
+asd index [x] filterFunc = x
+asd index input filterFunc = do
+  let hej = filterFunc index input
+  asd (index + 1) hej filterFunc
+
 solveOne :: [[Char]] -> Int
 solveOne input = do
   let l = length (at 0 input)
@@ -28,9 +44,15 @@ solveOne input = do
   let epsilon = [y | (x, y) <- analysis]
   toDec gamma * toDec epsilon
 
+solveTwo :: [[Char]] -> Int
+solveTwo input = do
+  let oxygen = asd 0 input doFilterCommon
+  let scrubber = asd 0 input doFilterUncommon
+  toDec oxygen * toDec scrubber
+
 solve :: String -> [[Char]] -> Int
 solve "part1" input = solveOne input
-solve "part2" input = 0
+solve "part2" input = solveTwo input
 solve x _ = error "Not a valid part"
 
 main :: IO ()
