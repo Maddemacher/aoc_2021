@@ -1,4 +1,4 @@
-import Aoc (findWinningBoard, hasWinningRow, parseInput, solve, sublist)
+import Aoc (hasWinningRow, parseInput, solve, sublist)
 import Data.List.Split (splitOn)
 import Test.Tasty (TestTree, defaultMain, testGroup)
 import Test.Tasty.HUnit (assertEqual, testCase)
@@ -16,7 +16,7 @@ winningBoard =
 main :: IO ()
 main = do
   input <- readFile "data/testInput.txt"
-  input2 <- readFile "data/testInput2.txt"
+  input2 <- readFile "data/input.txt"
   defaultMain (unitTests input input2)
 
 unitTests input input2 =
@@ -30,11 +30,7 @@ solveTests input input2 = do
   let (numbers2, boards2) = (parseInput input2)
   testGroup
     "solveTests"
-    [ testCase "should find winning board" $ assertEqual [] True (hasWinningRow untilWinningRow winningBoard),
-      testCase "should not find losing board" $ assertEqual [] False (hasWinningRow (init untilWinningRow) winningBoard),
-      testCase "should return true on sublist" $ assertEqual [] True (sublist [2, 3] [1, 2, 3]),
-      testCase "should return false on not sublist" $ assertEqual [] False (sublist [3, 4] [1, 2, 3]),
-      testCase "should return false on not sublist" $ assertEqual [] 102 (solve "part1" (numbers2, boards2)),
-      testCase "should count increases for part1" $ assertEqual [] 4512 (solve "part1" (numbers, boards))
-      -- testCase "should count increases for part1" $ assertEqual [] 230 (solve "part2" testNumbers)
+    [ testCase "should solve part 1" $ assertEqual [] 4512 (solve "part1" numbers boards),
+      testCase "should solve part 1 with real data" $ assertEqual [] 14093 (solve "part1" numbers2 boards2),
+      testCase "should sovle part 2 with real data" $ assertEqual [] 17388 (solve "part2" numbers2 boards2)
     ]
