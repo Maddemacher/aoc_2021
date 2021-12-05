@@ -41,7 +41,7 @@ countDuplicatePoints lines = do
   length [p | (p, count) <- freq, count > 1]
 
 solve :: [Char] -> [Line] -> Int
-solve "part1" lines = countDuplicatePoints [x | x <- lines, isStraigt x]
+solve "part1" lines = countDuplicatePoints (filter isStraigt lines)
 solve "part2" lines = countDuplicatePoints lines
 solve x _ = error "Not a valid part"
 
