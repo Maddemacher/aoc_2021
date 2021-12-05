@@ -1,7 +1,8 @@
 module Aoc where
 
-import Data.List (nub, transpose)
-import Data.List.Split (splitOn)
+import qualified Data.Char as Char
+import Data.List (minimumBy, nub, transpose)
+import Data.List.Split (wordsBy)
 import Data.Map (fromListWith, toList)
 import System.Environment.MrEnv (envAsString)
 
@@ -41,19 +42,14 @@ countDuplicatePoints lines = do
   length [p | (p, count) <- freq, count > 1]
 
 solve :: [Char] -> [Line] -> Int
-solve "part1" lines = countDuplicatePoints (filter isStraigt lines)
+solve "part1" lines = countDuplicatePoints [x | x <- lines, isStraigt x]
 solve "part2" lines = countDuplicatePoints lines
 solve x _ = error "Not a valid part"
 
-parsePoint :: String -> Point
-parsePoint raw = do
-  let [x, y] = map read (splitOn "," raw)
-  (x, y)
-
 parseLine :: String -> Line
 parseLine raw = do
-  let [p1, p2] = splitOn " -> " raw
-  (parsePoint p1, parsePoint p2)
+  let [x1, y1, x2, y2] = map read (wordsBy (not . Char.isNumber) raw)
+  ((x1, y1), (x2, y2))
 
 parseInput :: String -> [Line]
 parseInput input = map parseLine (lines input)

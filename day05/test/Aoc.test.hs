@@ -1,5 +1,4 @@
-import Aoc (Line, countDuplicatePoints, parseInput, solve, toPointLine, toUsedPoints)
-import Data.List.Split (splitOn)
+import Aoc (countDuplicatePoints, parseInput, solve, toPointLine, toUsedPoints)
 import Test.Tasty (TestTree, defaultMain, testGroup)
 import Test.Tasty.HUnit (assertEqual, testCase)
 
