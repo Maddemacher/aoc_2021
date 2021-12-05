@@ -1,6 +1,6 @@
 module Aoc where
 
-import Data.List (find, group, inits, maximumBy, minimumBy, nub, transpose)
+import Data.List (nub, transpose)
 import Data.List.Split (splitOn)
 import Data.Map (fromListWith, toList)
 import System.Environment.MrEnv (envAsString)
