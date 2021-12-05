@@ -3,7 +3,6 @@ module Aoc where
 import Data.List (find, group, inits, maximumBy, minimumBy, nub, transpose)
 import Data.List.Split (splitOn)
 import Data.Map (fromListWith, toList)
-import Data.Ord (comparing)
 import System.Environment.MrEnv (envAsString)
 
 type Point = (Int, Int)
@@ -13,27 +12,25 @@ type Line = (Point, Point)
 frequency :: (Ord a) => [a] -> [(a, Int)]
 frequency xs = toList (fromListWith (+) [(x, 1) | x <- xs])
 
-isStraigt :: (Eq a, Eq b) => ((a, b), (a, b)) -> Bool
+isStraigt :: Line -> Bool
 isStraigt ((x1, y1), (x2, y2)) = x1 == x2 || y1 == y2
 
-toStraigPointLine :: Line -> [Point]
-toStraigPointLine ((x1, y1), (x2, y2)) = do
+toStraightPointLine :: Line -> [Point]
+toStraightPointLine ((x1, y1), (x2, y2)) = do
   let xs = [p | p <- zip (repeat x1) [min y1 y2 .. max y1 y2]]
   let ys = [p | p <- zip [(min x1 x2) .. (max x1 x2)] (repeat y1)]
   nub (xs ++ ys)
 
-toDiagonalPointLine :: Line -> [Point]
-toDiagonalPointLine ((x1, y1), (x2, y2)) = do
-  let xs = [min x1 x2 .. max x1 x2]
-  let ys = [min y1 y2 .. max y1 y2]
-  let a = if x1 < x2 then xs else reverse xs
-  let b = if y1 < y2 then ys else reverse ys
-  [p | p <- zip a b]
+getPointRange :: Int -> Int -> [Int]
+getPointRange c1 c2 = do
+  let range = [min c1 c2 .. max c1 c2]
+  if c1 < c2 then range else reverse range
 
-toPointLine line =
-  if isStraigt line
-    then toStraigPointLine line
-    else toDiagonalPointLine line
+toDiagonalPointLine :: Line -> [Point]
+toDiagonalPointLine ((x1, y1), (x2, y2)) = [p | p <- zip (getPointRange x1 x2) (getPointRange y1 y2)]
+
+toPointLine :: Line -> [Point]
+toPointLine line = if isStraigt line then toStraightPointLine line else toDiagonalPointLine line
 
 toUsedPoints :: [Line] -> [Point]
 toUsedPoints = concatMap toPointLine
@@ -59,9 +56,7 @@ parseLine raw = do
   (parsePoint p1, parsePoint p2)
 
 parseInput :: String -> [Line]
-parseInput input = do
-  let rows = lines input
-  map parseLine rows
+parseInput input = map parseLine (lines input)
 
 main :: IO ()
 main = do
