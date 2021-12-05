@@ -1,8 +1,14 @@
-FROM gcc:4.9 as BASE
-WORKDIR /src
-COPY ./ .
-RUN gcc -static -o aoc aoc.c
+FROM haskell:8.10
 
-FROM alpine:latest
-COPY --from=BASE /src/aoc /aoc
-CMD ["./aoc"]
+WORKDIR /opt/app
+
+RUN cabal update
+
+COPY ./aoc.cabal /opt/app/aoc.cabal
+
+RUN cabal build --only-dependencies -j4
+
+COPY . /opt/app
+RUN cabal install
+
+CMD ["main"]
