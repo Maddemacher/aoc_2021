@@ -8,7 +8,7 @@ frequency :: [Int] -> [(Int, Int)]
 frequency xs = toList (fromListWith (+) [(x, 1) | x <- xs])
 
 simulate :: [Int] -> Int -> [Int]
-simulate [zeros, ones, twos, threes, fours, fives, sixs, sevens, eights] iteration =
+simulate [zeros, ones, twos, threes, fours, fives, sixs, sevens, eights] _ =
   [ones, twos, threes, fours, fives, sixs, sevens + zeros, eights, zeros]
 simulate x _ = error ("Too many" ++ show x)
 
