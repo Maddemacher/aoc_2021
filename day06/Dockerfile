@@ -1,4 +1,14 @@
-FROM r-base:4.1.1
-COPY . /usr/local/src/myscripts
-WORKDIR /usr/local/src/myscripts
-CMD ["Rscript", "aoc.R"]
+FROM haskell:8.10
+
+WORKDIR /opt/app
+
+RUN cabal update
+
+COPY ./aoc.cabal /opt/app/aoc.cabal
+
+RUN cabal build --only-dependencies -j4
+
+COPY . /opt/app
+RUN cabal install
+
+CMD ["main"]
