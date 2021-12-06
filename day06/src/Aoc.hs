@@ -13,9 +13,7 @@ simulate [zeros, ones, twos, threes, fours, fives, sixs, sevens, eights] iterati
 simulate x _ = error ("Too many" ++ show x)
 
 simulateIterations :: [Int] -> Int -> [Int]
-simulateIterations numbers iterations = do
-  let r = [0 .. iterations -1]
-  foldl simulate numbers r
+simulateIterations numbers iterations = foldl simulate numbers [1 .. iterations]
 
 solveOne :: [Int] -> Int
 solveOne numbers = sum (simulateIterations numbers 80)
