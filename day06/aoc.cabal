@@ -17,7 +17,6 @@ library
         base ^>=4.14.3.0, 
         mr-env,
         split,
-        lens,
         containers
 
 executable main 
@@ -37,7 +36,6 @@ test-suite test
         mr-env,
         split,
         containers,
-        lens,
         tasty,
         tasty-hunit
 
