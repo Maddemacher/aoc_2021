@@ -1,9 +1,14 @@
-FROM rust:1.56 as builder
-WORKDIR /usr/src/aoc
-COPY . .
-RUN cargo install --path .
+FROM haskell:8.10
 
-FROM rust:1.56-slim
-#RUN apt-get update && apt-get install -y extra-runtime-dependencies && rm -rf /var/lib/apt/lists/*
-COPY --from=builder /usr/local/cargo/bin/aoc /usr/local/bin/aoc
-CMD ["aoc"]
+WORKDIR /opt/app
+
+RUN cabal update
+
+COPY ./aoc.cabal /opt/app/aoc.cabal
+
+RUN cabal build --only-dependencies -j4
+
+COPY . /opt/app
+RUN cabal install
+
+CMD ["main"]
