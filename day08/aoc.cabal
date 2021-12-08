@@ -17,7 +17,6 @@ library
         base ^>=4.14.3.0, 
         mr-env,
         split,
-        MissingH,
         containers
 
 executable main 
@@ -36,7 +35,6 @@ test-suite test
         base ^>=4.14.3.0,
         mr-env,
         split,
-        MissingH,
         containers,
         tasty,
         tasty-hunit

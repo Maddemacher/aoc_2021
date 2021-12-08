@@ -1,12 +1,9 @@
 module Aoc where
 
 import Data.Function (on)
-import Data.IntMap (fromListWith, toList)
-import Data.List (group, groupBy, intersect, nub, sort, sortBy)
+import Data.List (intersect, sortBy)
 import Data.List.Split (splitOn)
-import Data.List.Utils (replace)
 import Data.Maybe (isJust)
-import Debug.Trace (trace)
 import System.Environment.MrEnv (envAsString)
 
 type ParsedInput = ([String], [String])
@@ -17,7 +14,7 @@ fromDigits :: [Int] -> Int
 fromDigits = foldl addDigit 0
 
 isZeroOrSixOrNine :: String -> [String] -> Int
-isZeroOrSixOrNine input [one, seven, four] = do
+isZeroOrSixOrNine input [one, _, four] = do
   if length (intersect one input) == 1
     then 6
     else
@@ -27,7 +24,7 @@ isZeroOrSixOrNine input [one, seven, four] = do
 isZeroOrSixOrNine _ _ = error "abo"
 
 isTwoOrThreeOrFive :: String -> [String] -> Int
-isTwoOrThreeOrFive input [one, seven, four] = do
+isTwoOrThreeOrFive input [one, _, four] = do
   if length (intersect one input) == 2
     then 3
     else
