@@ -1,11 +1,14 @@
-FROM mcr.microsoft.com/dotnet/sdk:5.0 AS build-env
-WORKDIR /app
+FROM haskell:8.10
 
-COPY * ./
-RUN dotnet restore
-RUN dotnet publish -c Release -o out
+WORKDIR /opt/app
 
-FROM mcr.microsoft.com/dotnet/runtime:5.0
-WORKDIR /app
-COPY --from=build-env /app/out .
-ENTRYPOINT [ "dotnet", "aoc.dll" ]
+RUN cabal update
+
+COPY ./aoc.cabal /opt/app/aoc.cabal
+
+RUN cabal build --only-dependencies -j4
+
+COPY . /opt/app
+RUN cabal install
+
+CMD ["main"]
