@@ -20,7 +20,7 @@ isZeroOrSixOrNine input [one, _, four] = do
     (1, _) -> 6
     (_, 4) -> 9
     (_, _) -> 0
-isZeroOrSixOrNine _ _ = error "abo"
+isZeroOrSixOrNine _ _ = error "Not right amount of args"
 
 isTwoOrThreeOrFive :: String -> [String] -> Int
 isTwoOrThreeOrFive input [one, _, four] = do
@@ -29,7 +29,7 @@ isTwoOrThreeOrFive input [one, _, four] = do
     (2, _) -> 3
     (_, 3) -> 5
     (_, _) -> 2
-isTwoOrThreeOrFive _ _ = error "abo"
+isTwoOrThreeOrFive _ _ = error "Not right amount of args"
 
 getDidigt :: [Char] -> Maybe Int
 getDidigt input = do
@@ -40,7 +40,7 @@ getDidigt input = do
     5 -> Nothing
     6 -> Nothing
     7 -> Just 8
-    x -> error "Hej"
+    x -> error "Too many segments"
 
 getDidigt2 :: [String] -> String -> Int
 getDidigt2 signals input = do
@@ -51,7 +51,7 @@ getDidigt2 signals input = do
     5 -> isTwoOrThreeOrFive input signals
     6 -> isZeroOrSixOrNine input signals
     7 -> 8
-    x -> error "Hej"
+    x -> error "Too many segments"
 
 getDidgits :: ParsedInput -> Int
 getDidgits (signals, inputs) = fromDigits (map (getDidigt2 signals) inputs)
