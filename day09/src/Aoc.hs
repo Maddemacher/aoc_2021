@@ -1,13 +1,8 @@
 module Aoc where
 
-import Control.Exception (try)
 import Data.Char (digitToInt)
-import Data.Function (on)
-import Data.IntMap (fromListWith, toList)
-import Data.List (group, groupBy, intersect, nub, sort, sortBy)
 import Data.List.Split (splitOn)
-import Data.Maybe (catMaybes, fromJust, fromMaybe, isJust, isNothing)
-import Debug.Trace (trace)
+import Data.Maybe (catMaybes, fromJust, fromMaybe, mapMaybe)
 import System.Environment.MrEnv (envAsString)
 
 get :: Int -> [a] -> Maybe a
@@ -45,7 +40,7 @@ getLowPoint (x, y) heatmap = do
 getLowPointsForRow :: (String, Int) -> [String] -> [Int]
 getLowPointsForRow (row, index) heatmap = do
   let indexedRow = zip row [0 ..]
-  catMaybes (map (\(c, i) -> getLowPoint (i, index) heatmap) indexedRow)
+  mapMaybe (\(c, i) -> getLowPoint (i, index) heatmap) indexedRow
 
 getLowPoints :: [String] -> [Int]
 getLowPoints heatmap = do
