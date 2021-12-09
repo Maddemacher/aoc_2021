@@ -1,12 +1,9 @@
 module Aoc where
 
 import Data.Function (on)
-import Data.IntMap (fromListWith, toList)
-import Data.List (group, groupBy, intersect, nub, sort, sortBy)
+import Data.List (intersect, sortBy)
 import Data.List.Split (splitOn)
-import Data.List.Utils (replace)
 import Data.Maybe (isJust)
-import Debug.Trace (trace)
 import System.Environment.MrEnv (envAsString)
 
 type ParsedInput = ([String], [String])
@@ -17,23 +14,21 @@ fromDigits :: [Int] -> Int
 fromDigits = foldl addDigit 0
 
 isZeroOrSixOrNine :: String -> [String] -> Int
-isZeroOrSixOrNine input [one, seven, four] = do
-  if length (intersect one input) == 1
-    then 6
-    else
-      if length (intersect four input) == 4
-        then 9
-        else 0
+isZeroOrSixOrNine input [one, _, four] = do
+  let (a, b) = (length (one `intersect` input), length (four `intersect` input))
+  case (a, b) of
+    (1, _) -> 6
+    (_, 4) -> 9
+    (_, _) -> 0
 isZeroOrSixOrNine _ _ = error "abo"
 
 isTwoOrThreeOrFive :: String -> [String] -> Int
-isTwoOrThreeOrFive input [one, seven, four] = do
-  if length (intersect one input) == 2
-    then 3
-    else
-      if length (intersect four input) == 3
-        then 5
-        else 2
+isTwoOrThreeOrFive input [one, _, four] = do
+  let (a, b) = (length (one `intersect` input), length (four `intersect` input))
+  case (a, b) of
+    (2, _) -> 3
+    (_, 3) -> 5
+    (_, _) -> 2
 isTwoOrThreeOrFive _ _ = error "abo"
 
 getDidigt :: [Char] -> Maybe Int

@@ -1,4 +1,4 @@
-import Aoc (parseInput, solve)
+import Aoc (solve)
 import Data.List (sort)
 import Test.Tasty (TestTree, defaultMain, testGroup)
 import Test.Tasty.HUnit (assertEqual, testCase)
@@ -16,9 +16,8 @@ unitTests input =
 
 solveTests :: [Char] -> TestTree
 solveTests input = do
-  let parsed = parseInput input
   testGroup
     "solveTests"
-    [ testCase "should solve part 1" $ assertEqual [] 352997 (solve "part1" parsed),
-      testCase "should solve part 2" $ assertEqual [] 101571302 (solve "part2" parsed)
+    [ testCase "should solve part 1" $ assertEqual [] 421 (solve "part1" input),
+      testCase "should solve part 2" $ assertEqual [] 986163 (solve "part2" input)
     ]
