@@ -1,37 +1,13 @@
-{-# LANGUAGE BangPatterns #-}
-
 module Aoc where
 
-import Data.Char (digitToInt)
-import Data.Foldable (maximumBy)
-import Data.Function (on)
-import Data.List (nub, sortBy)
+import Data.List (nub)
 import Data.List.Split (splitOn)
-import Data.Matrix (Matrix (ncols, nrows), combineRows, fromLists, getElem, mapPos, mapRow, matrix, setElem, setSize, toList, transpose, zero)
-import qualified Data.Matrix as Data
-import Data.Maybe (catMaybes)
-import Debug.Trace (trace)
+import Data.Matrix (Matrix, matrix)
 import System.Environment.MrEnv (envAsString)
 
 type Point = (Int, Int)
 
 type Fold = (Char, Int)
-
--- 5
-
--- (_, 6) = 4
-
--- (_, 7) = 3
-
--- (_, 8) = 2
-
--- (_, 9) = 1
-
--- (_, 10) = 0
-
--- -6 + 5 = -1
-
--- row + (- y + 5)
 
 performFold :: [Point] -> Fold -> [Point]
 performFold points (direction, index) =
@@ -42,14 +18,15 @@ performFold points (direction, index) =
 foldVertically :: [Point] -> Int -> [Point]
 foldVertically points index = do
   let kept = filter (\(x, y) -> x < index) points
-  let folded = map (\(x, y) -> (2 * index - x, y)) (filter (\(x, y) -> x > index) points)
+  let toFold = filter (\(x, y) -> x > index) points
+  let folded = map (\(x, y) -> (2 * index - x, y)) toFold
   nub (kept ++ folded)
 
 foldHorizontally :: [Point] -> Int -> [Point]
 foldHorizontally points index = do
   let kept = filter (\(x, y) -> y < index) points
-  let folds = filter (\(x, y) -> y > index) points
-  let folded = map (\(x, y) -> (x, 2 * index - y)) folds
+  let toFold = filter (\(x, y) -> y > index) points
+  let folded = map (\(x, y) -> (x, 2 * index - y)) toFold
   nub (kept ++ folded)
 
 solve :: [Char] -> ([Point], [Fold]) -> IO ()
@@ -82,7 +59,7 @@ parseInput input = do
 
 main :: IO ()
 main = do
-  part <- envAsString "part" "part2"
+  part <- envAsString "part" "part1"
   input <- readFile "data/input.txt"
   let parsed = parseInput input
   solve part parsed
