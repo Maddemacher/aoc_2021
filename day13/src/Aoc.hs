@@ -10,24 +10,14 @@ type Point = (Int, Int)
 type Fold = (Char, Int)
 
 performFold :: [Point] -> Fold -> [Point]
-performFold points (direction, index) =
-  if direction == 'y'
-    then foldHorizontally points index
-    else foldVertically points index
-
-foldVertically :: [Point] -> Int -> [Point]
-foldVertically points index = do
-  let kept = filter (\(x, y) -> x < index) points
-  let toFold = filter (\(x, y) -> x > index) points
-  let folded = map (\(x, y) -> (2 * index - x, y)) toFold
-  nub (kept ++ folded)
-
-foldHorizontally :: [Point] -> Int -> [Point]
-foldHorizontally points index = do
-  let kept = filter (\(x, y) -> y < index) points
-  let toFold = filter (\(x, y) -> y > index) points
-  let folded = map (\(x, y) -> (x, 2 * index - y)) toFold
-  nub (kept ++ folded)
+performFold points (direction, index) = do
+  let (f, ctor) =
+        if direction == 'x'
+          then (fst, \(x, y) -> (2 * index - x, y))
+          else (snd, \(x, y) -> (x, 2 * index - y))
+  let kept = filter (\p -> f p < index) points
+  let toFold = filter (\p -> f p > index) points
+  nub (kept ++ map ctor toFold)
 
 solve :: [Char] -> ([Point], [Fold]) -> IO ()
 solve "part1" (points, x : xs) = print (length (performFold points x))
