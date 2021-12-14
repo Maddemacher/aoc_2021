@@ -1,13 +1,12 @@
-import Aoc (solve)
+import Aoc (parseInput, solve)
 import Data.Char (digitToInt)
 import Data.List (sort)
-import Data.Matrix (fromLists)
 import Test.Tasty (TestTree, defaultMain, testGroup)
 import Test.Tasty.HUnit (assertEqual, testCase)
 
 main :: IO ()
 main = do
-  input <- readFile "data/testInput.txt"
+  input <- readFile "data/input.txt"
   defaultMain (unitTests input)
 
 unitTests input =
@@ -18,10 +17,9 @@ unitTests input =
 
 solveTests :: [Char] -> TestTree
 solveTests input = do
-  let rows = lines input
-  let parsed = fromLists (map (map digitToInt) rows)
+  let parsed = parseInput input
   testGroup
     "solveTests"
-    [ testCase "should solve part 1" $ assertEqual [] 1656 (solve "part1" parsed),
-      testCase "should solve part 2" $ assertEqual [] 195 (solve "part2" parsed)
+    [ testCase "should solve part 1" $ assertEqual [] 3143 (solve "part1" parsed),
+      testCase "should solve part 2" $ assertEqual [] 4110215602456 (solve "part2" parsed)
     ]

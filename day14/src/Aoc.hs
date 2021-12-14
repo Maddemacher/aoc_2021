@@ -1,50 +1,69 @@
 module Aoc where
 
-import Data.Char (digitToInt)
-import Data.List (find, group, groupBy, sort, sortOn)
+import Data.Function (on)
+import Data.List (sortBy)
 import Data.List.Split (splitOn)
-import Data.Maybe (catMaybes)
-import Debug.Trace (trace)
+import Data.Map (Map (), findWithDefault, foldlWithKey, fromList, insert, toList, (!))
+import qualified Data.Map.Strict as Map
 import System.Environment.MrEnv (envAsString)
 
-type Instruction = (String, String)
-
-applyInstructions :: String -> [Instruction] -> String
-applyInstructions [x] _ = [x]
-applyInstructions row instructions = do
-  let curr = take 2 row
-  let instruction = find (\(i, _) -> i == curr) instructions
-  case instruction of
-    Just instruction -> head row : snd instruction ++ applyInstructions (tail row) instructions
-    Nothing -> "No instruction found"
-
-getGeneration :: String -> [Instruction] -> Int -> String
-getGeneration row instructions generation = foldl (\r _ -> applyInstructions r instructions) row [0 .. (generation - 1)]
-
-getPolymerValue :: [Char] -> [Instruction] -> Int -> Int
-getPolymerValue row instructions generation = do
-  let groups = group (sort (getGeneration row instructions generation))
-  let sorted = sortOn length groups
-  length (last sorted) - length (head sorted)
-
-solve :: String -> (String, [Instruction]) -> Int
-solve "part1" (row, instructions) = getPolymerValue row instructions 10
-solve "part2" (row, instructions) = 0
+solve "part1" (row, instructions) = getPolymerValue (setupInstructions row instructions) 10
+solve "part2" (row, instructions) = getPolymerValue (setupInstructions row instructions) 40
 solve x _ = error "Not a valid part"
 
-parseInstruction :: String -> Instruction
+getPolymerValue template generations = do
+  let final = foldl updateTemplate template [1 .. generations]
+  let sorted = sortBy (on compare snd) (toList (foldl toMap Map.empty (toList final)))
+  snd (last sorted) - snd (head sorted)
+
+toMap :: Map Char Int -> (String, (String, Int)) -> Map Char Int
+toMap m (k, (_, count)) = do
+  let key = last k
+  let c = findWithDefault 0 key m
+  insert key (count + c) m
+
+updateTemplate :: Map String (String, Int) -> Int -> Map String (String, Int)
+updateTemplate template _ = do
+  foldlWithKey updateTemplateKey template template
+
+updateTemplateKey :: Map String (String, Int) -> String -> (String, Int) -> Map String (String, Int)
+updateTemplateKey template key (after, count) = do
+  if count == 0
+    then template
+    else do
+      let a = head key : after
+      let b = after ++ [last key]
+
+      let currA = template ! a
+      let afterA = insert a (fst currA, snd currA + count) template
+
+      let currB = afterA ! b
+      let afterB = insert b (fst currB, snd currB + count) afterA
+
+      let currC = afterB ! key
+      insert key (fst currC, snd currC - count) afterB
+
+setupInstructions :: String -> Map String (String, Int) -> Map String (String, Int)
+setupInstructions [x] instructions = instructions
+setupInstructions row instructions = do
+  let key = take 2 row
+  let (after, count) = instructions ! key
+  let updated = insert key (after, count + 1) instructions
+  setupInstructions (tail row) updated
+
+parseInstruction :: String -> (String, (String, Int))
 parseInstruction raw = do
   let [combination, insert] = splitOn " -> " raw
-  (combination, insert)
+  (combination, (insert, 0))
 
-parseInput :: String -> (String, [Instruction])
+parseInput :: String -> (String, Map String (String, Int))
 parseInput input = do
   let [row, rawInstructions] = splitOn "\n\n" input
   let instructions = map parseInstruction (lines rawInstructions)
-  (row, instructions)
+  (row, Map.fromList instructions)
 
 main :: IO ()
 main = do
-  part <- envAsString "part" "part1"
+  part <- envAsString "part" "part2"
   input <- readFile "data/input.txt"
   print (solve part (parseInput input))
