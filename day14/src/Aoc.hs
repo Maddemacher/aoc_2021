@@ -7,12 +7,14 @@ import Data.Map (Map (), findWithDefault, foldlWithKey, fromList, insert, toList
 import qualified Data.Map.Strict as Map
 import System.Environment.MrEnv (envAsString)
 
+solve :: [Char] -> (String, Map String (String, Int)) -> Int
 solve "part1" (row, instructions) = getPolymerValue (setupInstructions row instructions) 10
 solve "part2" (row, instructions) = getPolymerValue (setupInstructions row instructions) 40
 solve x _ = error "Not a valid part"
 
+getPolymerValue :: Map String (String, Int) -> Int -> Int
 getPolymerValue template generations = do
-  let final = foldl updateTemplate template [1 .. generations]
+  let final = foldl getNextGeneration template [1 .. generations]
   let sorted = sortBy (on compare snd) (toList (foldl toMap Map.empty (toList final)))
   snd (last sorted) - snd (head sorted)
 
@@ -22,26 +24,22 @@ toMap m (k, (_, count)) = do
   let c = findWithDefault 0 key m
   insert key (count + c) m
 
-updateTemplate :: Map String (String, Int) -> Int -> Map String (String, Int)
-updateTemplate template _ = do
-  foldlWithKey updateTemplateKey template template
+getNextGeneration :: Map String (String, Int) -> Int -> Map String (String, Int)
+getNextGeneration template _ = foldlWithKey updateTemplate template template
 
-updateTemplateKey :: Map String (String, Int) -> String -> (String, Int) -> Map String (String, Int)
-updateTemplateKey template key (after, count) = do
-  if count == 0
-    then template
-    else do
-      let a = head key : after
-      let b = after ++ [last key]
+updateTemplate :: Map String (String, Int) -> String -> (String, Int) -> Map String (String, Int)
+updateTemplate template key (after, count) = do
+  let a = head key : after
+  let b = after ++ [last key]
 
-      let currA = template ! a
-      let afterA = insert a (fst currA, snd currA + count) template
+  let currA = template ! a
+  let afterA = insert a (fst currA, snd currA + count) template
 
-      let currB = afterA ! b
-      let afterB = insert b (fst currB, snd currB + count) afterA
+  let currB = afterA ! b
+  let afterB = insert b (fst currB, snd currB + count) afterA
 
-      let currC = afterB ! key
-      insert key (fst currC, snd currC - count) afterB
+  let currC = afterB ! key
+  insert key (fst currC, snd currC - count) afterB
 
 setupInstructions :: String -> Map String (String, Int) -> Map String (String, Int)
 setupInstructions [x] instructions = instructions
